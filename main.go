@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/moverq1337/JWTAuth/config"
 	"github.com/moverq1337/JWTAuth/controllers"
+	"github.com/moverq1337/JWTAuth/middleware"
 )
 
 func main() {
@@ -13,5 +14,6 @@ func main() {
 	fmt.Println("hello")
 	r.POST("/registration", controllers.UserRegistation)
 	r.POST("/login", controllers.UserLogin)
+	r.POST("/hello", middleware.AuthMiddleware, controllers.ProtectedHello)
 	r.Run()
 }

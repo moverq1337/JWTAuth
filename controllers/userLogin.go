@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/moverq1337/JWTAuth/config"
 	"github.com/moverq1337/JWTAuth/models"
+	"github.com/moverq1337/JWTAuth/utils"
 )
 
 func UserLogin(c *gin.Context) {
@@ -28,13 +29,21 @@ func UserLogin(c *gin.Context) {
 		fmt.Println(err)
 		return
 	}
-	if !CheckPasswordHash(LoginUser.Password, dbUser.Password) {
+	if !utils.CheckPasswordHash(LoginUser.Password, dbUser.Password) {
 		c.JSON(400, gin.H{
 			"message": "incorrect username or password",
 		})
 		return
 	}
+	token, err := utils.CreateToken(LoginUser.Name)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"message": "failed to create token",
+		})
+		return
+	}
 	c.JSON(200, gin.H{
-		"message": "got it",
+		"message": "got it with token",
+		"token":   token,
 	})
 }
